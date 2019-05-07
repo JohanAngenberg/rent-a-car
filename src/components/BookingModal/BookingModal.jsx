@@ -9,7 +9,7 @@ class BookingModal extends Component {
         this.state = {
             ssnInput: '',
             lpInput: '',
-            odometer: 0,
+            odometer: null,
         }
     }
 
@@ -54,10 +54,10 @@ class BookingModal extends Component {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={this.props.toggleBookingModal.bind(this)}>
+                <Button variant="secondary" onClick={this.props.toggleModal.bind(this)}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={this.props.createBooking.bind(this, this.state.emailInput, this.state.passInput)}>
+                <Button variant="primary" onClick={this.props.createBooking.bind(this, this.state.ssnInput, this.state.lpInput, this.state.odometer)}>
                     Create Booking
                 </Button>
             </Modal.Footer>
