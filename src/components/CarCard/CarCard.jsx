@@ -9,7 +9,9 @@ class CarCard extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            showModal: false
+            showModal: false,
+            price: 0,
+            total: 0
         }
     }
 
@@ -26,27 +28,22 @@ class CarCard extends Component {
     render() {
         return (
             <Card style={{ width: '18rem', margin: '10px' }}>
-                <Card.Img variant="top" src={this.props.car.img} />
+                <div style={{height: "200px"}}>
+                <Card.Img variant="top" src={this.props.car.img}/>
+                </div>
                 <Card.Body>
                     <Card.Title>{this.props.car.type}</Card.Title>
-                    <Card.Text>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.
-                    </Card.Text>
                 </Card.Body>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                    <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                {!this.props.car.available && <ListGroup.Item>Not available</ListGroup.Item>}
+                    <ListGroup.Item>Base day rental: {this.props.car.baseDayRental}$ </ListGroup.Item>
+                    <ListGroup.Item>Price per km: {this.props.car.kmPrice}$</ListGroup.Item>
+                    <ListGroup.Item>Estimated price: {this.props.car.baseDayRental * this.props.duration}$</ListGroup.Item>
                 </ListGroup>
-                {this.props.car.available &&
-                <Card.Body>
+                <Card.Body onClick={this.handleRental.bind(this, 'Z6fTgis8MWH17zzR48eG', 'BoHXWKSb8zdCYfK1GUJC')}>
                     <Card.Link 
-                        onClick={this.handleRental.bind(this, 'Z6fTgis8MWH17zzR48eG', 'BoHXWKSb8zdCYfK1GUJC')} 
                         href="#">Rent Car
                     </Card.Link>
-                 
-                </Card.Body>}
+                </Card.Body>
             </Card>
         );
     }

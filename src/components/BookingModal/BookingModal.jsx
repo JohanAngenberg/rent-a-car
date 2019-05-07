@@ -1,65 +1,72 @@
-import React from 'react';
+import React, {Component} from  'react';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
-class ConfirmationModal extends React.Component {
+class BookingModal extends Component {
     constructor(props) {
-        super(props);
-
+        super(props)
         this.state = {
-            playlistName: ''
+            ssnInput: '',
+            lpInput: '',
+            odometer: 0,
         }
     }
 
-    handleInputTextChange(e) {
-        let playlistName = e.target.value;
-        this.setState({ playlistName: playlistName });
+    handleSSNChange(e) {
+        this.setState({
+            ssnInput: e.target.value
+        })
     }
-    handleSubmitplaylist() {
-        this.props.createPlaylist(this.state.playlistName);
-        this.props.toggleModal(false);
-    }
-
-    handleKeyPress(e) {
-        if (e.key === "Enter") {
-            this.handleSubmitplaylist()
-        }
+    handleLpChange(e) {
+        this.setState({
+            lpInput: e.target.value
+        })
     }
 
+    handleOdometerChange(e) {
+        this.setState({
+            odometer: e.target.value
+        })
+    }
 
     render() {
-        const modalWrapper = {
-            transform: this.props.displayModal ? 'translateY(0vh)' : 'translateY(-100vh)',
-        }
-
-        const backDrop = {
-            opacity: this.props.displayModal ? '1' : '0',
-            transform: this.props.displayModal ? 'translateY(0vh)' : 'translateY(-100vh)',
-        }
-
-        return (
-            <div>
-                <div style={backDrop} className='backDrop' onClick={this.props.toggleModal.bind(this, false)}>&nbsp;</div>
-                <div style={modalWrapper} className='confirmationModalWrapper'>
-                    <div className='confirmationModalHeader'>
-                        <h3 className='confirmationModalHeaderH3'>Create Playlist</h3>
-                    </div>
-                    <div className='confirmationModalBody'>
-
-                        <h5>Enter playlist name</h5>
-                        <input
-                            className='confirmationModal-input'
-                            type='text'
-                            onKeyPress={this.handleKeyPress.bind(this)}
-                            onChange={this.handleInputTextChange.bind(this)}
-                        />
-                    </div>
-                    <div className='confirmationModalFooter'>
-                        <button className='btnCancel' onClick={this.handleSubmitplaylist.bind(this)}>Submit</button>
-                    </div>
-                </div>
-            </div>
-        )
+        return(
+        <>
+        <Modal show={true}>
+            <Modal.Header>
+                <Modal.Title>Book {this.props.type}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group onChange={this.handleSSNChange.bind(this)}>
+                        <Form.Label>Social security number</Form.Label>
+                        <Form.Control type="text" placeholder="Enter SSN" />
+                    </Form.Group>
+                    <Form.Group onChange={this.handleLpChange.bind(this)}>
+                        <Form.Label>Licence plate</Form.Label>
+                        <Form.Control type="text" placeholder="Enter Licenceplate" />
+                    </Form.Group>
+                    <Form.Group onChange={this.handleOdometerChange.bind(this)}>
+                        <Form.Label>Odometer</Form.Label>
+                        <Form.Control type="number" placeholder="Enter Odometer" />
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={this.props.toggleBookingModal.bind(this)}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={this.props.createBooking.bind(this, this.state.emailInput, this.state.passInput)}>
+                    Create Booking
+                </Button>
+            </Modal.Footer>
+        </Modal>
+      </>
+        );
     }
+
 }
 
-export default ConfirmationModal;
 
+export default BookingModal;

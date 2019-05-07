@@ -4,6 +4,7 @@ import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form'
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker} from 'react-dates';
@@ -48,19 +49,21 @@ class CarListings extends Component {
             startDate: null,
             endDate: null,
             focusedInput: null,
+            duration: 0,
+            distance: 0,
+            showType: '',
             cars: [],
             activePage: 'browse'
 
         }
     }
-
-    handlePage(page) {
-
-    }
     
 
     componentDidMount() {
         const carsRef = []
+
+        
+        
         db.collection('cars').get().then(snapshot => {
             snapshot.docs.forEach(doc => {
                 carsRef.push(doc.data())
@@ -70,15 +73,31 @@ class CarListings extends Component {
             cars: this.props.cars,
             isLoading: false
         })
+        
+
+    }
+
+    handleDatesChange (startDate, endDate) {
+        let duration = 0
+        if (startDate !== null && endDate !== null) {
+            duration = endDate.diff(startDate, 'days')
+        }
+        this.setState({duration})
+        
+    }
+
+    handleChangeType (e) {
+        this.setState({showType: e.target.value})
     }
 
 
     render() {
-        const cars = this.state.dummy
+
+        const cars = this.state.cars
+        .filter(car => this.state.showType === '' ? car : (car.type === this.state.showType))
         .map((car) => (
-                <CarCard key={car.licencePlate} car={car}/>
+                <CarCard key={car.licencePlate} car={car} duration={this.state.duration}/>
             ));
-        console.log(cars);
         
         return(
             <Container>
@@ -89,10 +108,31 @@ class CarListings extends Component {
                     startDateId="date_from"
                     endDate={this.state.endDate}
                     endDateId="date_to"
-                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+                    onDatesChange={({ startDate, endDate }) => {this.handleDatesChange(startDate, endDate); this.setState({ startDate, endDate })}}
                     focusedInput={this.state.focusedInput}
                     onFocusChange={focusedInput => this.setState({ focusedInput })}
+                    style={{width: '100%'}}
                 />
+                </Col>
+                <Col>
+                <Form.Group onChange={this.handleChangeType.bind(this)} controlId="selectType">
+                        <Form.Control style={{height: '49px'}} as="select">
+                            <option value=''>Show All</option>
+                            <option value='Small Car'>Small Car</option>
+                            <option value='Van'>Van</option>
+                            <option Value='Minibus'>Minibus</option>
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group onChange={this.handleChangeType.bind(this)} controlId="selectType">
+                        <Form.Control style={{height: '49px'}} as="select">
+                            <option value=''>Show All</option>
+                            <option value='Small Car'>Small Car</option>
+                            <option value='Van'>Van</option>
+                            <option Value='Minibus'>Minibus</option>
+                        </Form.Control>
+                    </Form.Group>
                 </Col>
                 </Row>
 
