@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-**/gifirebase/firebase
+/src/components/firebase
 /.pnp
 .pnp.js
 
