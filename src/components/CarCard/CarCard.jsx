@@ -55,11 +55,16 @@ class CarCard extends Component {
                     <ListGroup.Item>Price per km: {this.props.car.kmPrice * this.props.car.kmMultiplier}$</ListGroup.Item>
                     <ListGroup.Item>Estimated price: {this.props.car.baseDayRental * this.props.duration * this.props.car.dayMultiplier}$</ListGroup.Item>
                 </ListGroup>
-                <Card.Body onClick={this.toggleModal.bind(this)}>
+                {this.props.user ? <Card.Body onClick={this.toggleModal.bind(this)}>
                     <Card.Link 
                         href="#">Rent Car
                     </Card.Link>
-                </Card.Body>
+                    </Card.Body>
+                : <Card.Body>
+                    <Card.Link 
+                        href="#">Login to create booking
+                    </Card.Link>
+                </Card.Body>}
             </Card>
             </>
         );

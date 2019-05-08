@@ -98,7 +98,7 @@ class MainWrapper extends Component {
                 toggleSignUp={this.handleToggleSignUp.bind(this)}
                 signUpUser={this.handleSignUp.bind(this)}
                 /> : null}
-                {this.state.activePage === 'browse' && <CarListings updateCars={this.updateCars.bind(this)}/>}
+                {this.state.activePage === 'browse' && <CarListings user={this.state.user} updateCars={this.updateCars.bind(this)}/>}
                 {this.state.activePage === 'bookings' && <UserPage cars={this.state.cars}/>}
             </Container>
             </div>
