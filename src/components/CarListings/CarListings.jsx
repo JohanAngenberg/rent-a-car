@@ -69,10 +69,7 @@ class CarListings extends Component {
                 carsRef.push(doc.data())
             })
         }).then(() => this.setState({cars: carsRef, isLoading: false}))
-        this.setState({
-            cars: this.props.cars,
-            isLoading: false
-        })
+        .then(() => this.props.updateCars(this.state.cars))
         
 
     }
@@ -111,7 +108,6 @@ class CarListings extends Component {
                     onDatesChange={({ startDate, endDate }) => {this.handleDatesChange(startDate, endDate); this.setState({ startDate, endDate })}}
                     focusedInput={this.state.focusedInput}
                     onFocusChange={focusedInput => this.setState({ focusedInput })}
-                    style={{width: '100%'}}
                 />
                 </Col>
                 <Col>
@@ -120,7 +116,7 @@ class CarListings extends Component {
                             <option value=''>Show All</option>
                             <option value='Small Car'>Small Car</option>
                             <option value='Van'>Van</option>
-                            <option Value='Minibus'>Minibus</option>
+                            <option value='Minibus'>Minibus</option>
                         </Form.Control>
                     </Form.Group>
                 </Col>
@@ -130,7 +126,7 @@ class CarListings extends Component {
                             <option value=''>Show All</option>
                             <option value='Small Car'>Small Car</option>
                             <option value='Van'>Van</option>
-                            <option Value='Minibus'>Minibus</option>
+                            <option value='Minibus'>Minibus</option>
                         </Form.Control>
                     </Form.Group>
                 </Col>

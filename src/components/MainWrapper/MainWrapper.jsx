@@ -6,8 +6,7 @@ import SignUp from '../SignUp/SignUp.jsx'
 import UserPage from '../UserPage/UserPage.jsx'
 import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+
 
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -65,6 +64,10 @@ class MainWrapper extends Component {
         auth.signOut()
     }
 
+    updateCars(cars) {
+        this.setState({cars})
+    }
+
     componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -73,20 +76,8 @@ class MainWrapper extends Component {
                 this.setState({user: null})
             }
           })
-        
-        const carlist = []
-        db.collection('cars').get().then(function(querySnapshot) {
-            querySnapshot.forEach(car => {
-                carlist.push({
-                    car
-                })
-            })
-        })
-        this.setState({cars : carlist, isLoading: false})
-
     }
     render() {
-        const cars = this.state.cars
         return(
             <div>
             <Toolbar toggleLogin={this.handleToggleLogin.bind(this)}
@@ -107,8 +98,8 @@ class MainWrapper extends Component {
                 toggleSignUp={this.handleToggleSignUp.bind(this)}
                 signUpUser={this.handleSignUp.bind(this)}
                 /> : null}
-                {this.state.activePage === 'browse' && <CarListings cars={cars}/>}
-                {this.state.activePage === 'bookings' && <UserPage user={this.state.user}/>}
+                {this.state.activePage === 'browse' && <CarListings updateCars={this.updateCars.bind(this)}/>}
+                {this.state.activePage === 'bookings' && <UserPage cars={this.state.cars}/>}
             </Container>
             </div>
         );

@@ -32,7 +32,7 @@ class CarCard extends Component {
             initialOdometer: odometer,
             type: this.props.car.type,
             returned: false,
-            start: dateTime,
+            start: firebase.firestore.FieldValue.serverTimestamp(),
         }).then(() => {
             console.log('Booking Created');
             this.toggleModal()
@@ -51,9 +51,9 @@ class CarCard extends Component {
                     <Card.Title>{this.props.car.type}</Card.Title>
                 </Card.Body>
                 <ListGroup className="list-group-flush">
-                    <ListGroup.Item>Base day rental: {this.props.car.baseDayRental}$ </ListGroup.Item>
-                    <ListGroup.Item>Price per km: {this.props.car.kmPrice}$</ListGroup.Item>
-                    <ListGroup.Item>Estimated price: {this.props.car.baseDayRental * this.props.duration}$</ListGroup.Item>
+                    <ListGroup.Item>Base day rental: {this.props.car.baseDayRental * this.props.car.dayMultiplier}$ </ListGroup.Item>
+                    <ListGroup.Item>Price per km: {this.props.car.kmPrice * this.props.car.kmMultiplier}$</ListGroup.Item>
+                    <ListGroup.Item>Estimated price: {this.props.car.baseDayRental * this.props.duration * this.props.car.dayMultiplier}$</ListGroup.Item>
                 </ListGroup>
                 <Card.Body onClick={this.toggleModal.bind(this)}>
                     <Card.Link 
