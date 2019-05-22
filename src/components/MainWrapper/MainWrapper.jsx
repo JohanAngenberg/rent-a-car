@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import Toolbar from '../Toolbar/Toolbar.jsx'
-import CarListings from '../CarListings/CarListings.jsx'
-import Login from '../Login/Login.jsx'
-import SignUp from '../SignUp/SignUp.jsx'
-import UserPage from '../UserPage/UserPage.jsx'
+import Toolbar from '../Toolbar/Toolbar.jsx';
+import CarListings from '../CarListings/CarListings.jsx';
+import Login from '../Login/Login.jsx';
+import SignUp from '../SignUp/SignUp.jsx';
+import UserPage from '../UserPage/UserPage.jsx';
+import CustomerList from '../CustomerList/CustomerList.jsx';
 import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
 
@@ -76,6 +77,7 @@ class MainWrapper extends Component {
                 this.setState({user: null})
             }
           })
+        
     }
     render() {
         return(
@@ -100,6 +102,7 @@ class MainWrapper extends Component {
                 /> : null}
                 {this.state.activePage === 'browse' && <CarListings user={this.state.user} updateCars={this.updateCars.bind(this)}/>}
                 {this.state.activePage === 'bookings' && <UserPage cars={this.state.cars}/>}
+                {this.state.activePage === 'customers' && <CustomerList cars={this.state.cars}/>}
             </Container>
             </div>
         );

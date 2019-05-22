@@ -27,6 +27,7 @@ class ToolBar extends Component {
               <Nav className="mr-auto">
                 <Nav.Link onClick={this.props.changePage.bind(this,'browse')} href="#">Browse Cars</Nav.Link>
                 {this.props.user && <Nav.Link onClick={this.props.changePage.bind(this,'bookings')} href="#">Bookings</Nav.Link>}
+                {this.props.user && <Nav.Link onClick={this.props.changePage.bind(this,'customers')} href="#">Customers</Nav.Link>}
               </Nav>
               <Nav>
                 {!this.props.user && <Nav.Link onClick={this.props.toggleLogin.bind(this)} href="#">Sign In</Nav.Link>}

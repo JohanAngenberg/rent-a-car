@@ -18,57 +18,70 @@ class MainWrapper extends Component {
             showModal: false,
             bookings: [],
             toReturn: {},
+            testState:[]
         }
     }
 
     getBookings() {
-        const bookingsRef = []
-        db.collection('bookings').get().then(snapshot => {
-            let i = 0
-            snapshot.docs.forEach(doc => {
-                bookingsRef.push(doc.data())
-                bookingsRef[i].reference = doc.id
-                if (doc.data().end) {
-                    let carData = this.props.cars.filter(car => car.type === doc.data().type)[0]
-                    let startDate = moment(doc.data().start.toDate())
-                    let endDate = moment(doc.data().end.toDate())
-                    let duration = 1 + endDate.diff(startDate, 'days')
-                    let distancePrice = carData.kmPrice * doc.data().totalDistance * carData.kmMultiplier;
-                    let durationPrice = carData.baseDayRental * duration * carData.dayMultiplier;
-                    
-                    bookingsRef[i].duration = duration
-                    bookingsRef[i].totalPrice = distancePrice + durationPrice 
-                }
-                
-            })
-        }).then(() => this.setState({bookings: bookingsRef}))
+        fetch('https://biluthyrning.herokuapp.com/api/booking/read.php')
+        .then(res => res.json()
+            .then(json => json.data)
+            .catch(err => console.log(err)
+            ))
+        .then(data => this.setState({bookings: data, isLoading: false}))
+        .catch(err => console.log(err))
     }
 
     componentDidMount() {
         this.getBookings()
-        
-        
     }
 
     handleReturn (finalOdometer){
-        const booking = this.state.toReturn
+        const booking = this.state.toReturn;
         
-        db.collection("bookings").doc(booking.reference).set({
+        let today = new Date();
+        let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let dateTime = moment();
+        let distance = finalOdometer - booking.initial_odo;
+        let duration = 1 + dateTime.diff(booking.start, 'days');
+        let distancePrice = booking.kmprice * distance * booking.kmMultiplier;
+        let durationPrice = booking.baseDayRental * duration * booking.dayMultiplier;
+
+        let data = {
+            booking_id: booking.id,
+            booking_end: dateTime,
+            booking_final_odo: finalOdometer,
+            booking_distance: distance,
+            duration: duration,
+            booking_price: distancePrice + durationPrice,
             returned: true,
-            finalOdometer: finalOdometer,
-            end: firebase.firestore.FieldValue.serverTimestamp(),
-            totalDistance: finalOdometer - booking.initialOdometer,
-        }, 
-        {merge: true})
+        }
+
+        console.log(data);
+        
+        
+        fetch('https://biluthyrning.herokuapp.com/api/booking/update.php', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then((res) => console.log(res))
+        .then(() => this.toggleModal())
+        .then(() => {
+            this.getBookings()
+        })
+        .catch(err => console.log(err))
         .then(() => {
             this.getBookings()
         })
         
         .then(() => {
             console.log('Car returned');
-            this.toggleModal()
+            this.closeModal()
         }).catch((err) => console.error("Error returning car", err))
-        this.setState({showModal: false})
     }
 
     closeModal() {
@@ -83,17 +96,17 @@ class MainWrapper extends Component {
     render() {
         const bookings = this.state.bookings.map(booking => (
             <tr>
-            <td>{booking.reference}</td>
+            <td>{booking.id}</td>
             <td>{booking.ssn}</td>
             <td>{booking.licenceplate}</td>
-            <td>{booking.type}</td>
-            <td>{booking.start.toDate().toString()}</td>
-            <td>{booking.end ? booking.end.toDate().toString() : 'not returned'}</td>
-            <td>{booking.initialOdometer}</td>
-            <td>{booking.finalOdometer ? booking.finalOdometer : 0}</td>
+            <td>{booking.cartype}</td>
+            <td>{booking.start}</td>
+            <td>{booking.end ? booking.end : 'not returned'}</td>
+            <td>{booking.initial_odo}</td>
+            <td>{booking.final_odo ? booking.final_odo : 0}</td>
             <td>{booking.duration ? booking.duration : 0}</td>
-            <td>{booking.totalDistance ? booking.totalDistance : 0}</td>
-            <td>{booking.totalPrice ? booking.totalPrice: 0}$</td>
+            <td>{booking.distance ? booking.distance : 0}</td>
+            <td>{booking.price ? booking.price: 0}$</td>
             <td>{!booking.returned ? <Button onClick={this.openModal.bind(this, booking)}>Return</Button>: 'Returned'}</td>
             </tr>
         ))

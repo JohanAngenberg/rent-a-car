@@ -26,7 +26,7 @@ class BookingModal extends Component {
 
     handleOdometerChange(e) {
         this.setState({
-            odometer: e.target.value
+            odometer: parseInt(e.target.value)
         })
     }
 

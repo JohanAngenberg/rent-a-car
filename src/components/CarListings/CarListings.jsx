@@ -60,18 +60,15 @@ class CarListings extends Component {
     
 
     componentDidMount() {
-        const carsRef = []
 
-        
-        
-        db.collection('cars').get().then(snapshot => {
-            snapshot.docs.forEach(doc => {
-                carsRef.push(doc.data())
-            })
-        }).then(() => this.setState({cars: carsRef, isLoading: false}))
+        fetch('https://biluthyrning.herokuapp.com/api/car/read.php')
+        .then(res => res.json()
+            .then(json => json.data)
+            .catch(err => console.log(err)
+            ))
+        .then(data => this.setState({cars: data, isLoading: false}))
         .then(() => this.props.updateCars(this.state.cars))
-        
-
+        .catch(err => console.log(err))
     }
 
     handleDatesChange (startDate, endDate) {
@@ -91,7 +88,7 @@ class CarListings extends Component {
     render() {
 
         const cars = this.state.cars
-        .filter(car => this.state.showType === '' ? car : (car.type === this.state.showType))
+        .filter(car => this.state.showType === '' ? car : (car.name === this.state.showType))
         .map((car) => (
                 <CarCard user={this.props.user} key={car.licencePlate} car={car} duration={this.state.duration}/>
             ));
