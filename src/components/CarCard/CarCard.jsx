@@ -7,8 +7,6 @@ import BookingModal from '../BookingModal/BookingModal.jsx';
 
 const moment = require('moment');
 
-const db = firebase.firestore();
-
 class CarCard extends Component {  
     constructor(props) {
         super(props)
@@ -24,16 +22,18 @@ class CarCard extends Component {
     }
 
     handleBooking(ssn, plate, odometer) {
+        let customersCheck = this.props.customers.filter(c => c.ssn === ssn)
         let dateTime = moment();
         let data = {
             customer_ssn: ssn,
             booking_licenceplate: plate,
             booking_cartype: this.props.car.name,
             booking_start: dateTime,
-            booking_initial_odo: odometer
+            booking_initial_odo: odometer,
+
         }
         console.log(JSON.stringify(data));
-        
+        if (customersCheck.length !== 0 && plate && odometer) {
         fetch('https://biluthyrning.herokuapp.com/api/booking/create.php', {
             method: "POST",
             headers: {
@@ -44,6 +44,7 @@ class CarCard extends Component {
         .then((res) => res.json())
         .then(() => this.toggleModal())
         .catch(err => console.log(err))
+        } 
     }
 
     render() {

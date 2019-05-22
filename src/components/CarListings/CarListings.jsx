@@ -90,7 +90,7 @@ class CarListings extends Component {
         const cars = this.state.cars
         .filter(car => this.state.showType === '' ? car : (car.name === this.state.showType))
         .map((car) => (
-                <CarCard user={this.props.user} key={car.licencePlate} car={car} duration={this.state.duration}/>
+                <CarCard customers={this.props.customers} user={this.props.user} key={car.licencePlate} car={car} duration={this.state.duration}/>
             ));
         
         return(

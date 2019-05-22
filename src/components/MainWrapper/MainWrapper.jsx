@@ -28,7 +28,8 @@ class MainWrapper extends Component {
             user: '',
             activePage: 'browse',
             showLogin: false,
-            showSignUp: false
+            showSignUp: false,
+            customers: []
         }
     }
 
@@ -69,10 +70,21 @@ class MainWrapper extends Component {
         this.setState({cars})
     }
 
+    getCustomers() {
+        fetch('https://biluthyrning.herokuapp.com/api/customer/read.php')
+        .then(res => res.json()
+            .then(json => json.data)
+            .catch(err => console.log(err)
+            ))
+        .then(data => this.setState({customers: data}))
+        .catch(err => console.log(err))
+    }
+
     componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
               this.setState({user: user.email})
+              this.getCustomers()
             } else {
                 this.setState({user: null})
             }
@@ -100,7 +112,7 @@ class MainWrapper extends Component {
                 toggleSignUp={this.handleToggleSignUp.bind(this)}
                 signUpUser={this.handleSignUp.bind(this)}
                 /> : null}
-                {this.state.activePage === 'browse' && <CarListings user={this.state.user} updateCars={this.updateCars.bind(this)}/>}
+                {this.state.activePage === 'browse' && <CarListings customers={this.state.customers} user={this.state.user} updateCars={this.updateCars.bind(this)}/>}
                 {this.state.activePage === 'bookings' && <UserPage cars={this.state.cars}/>}
                 {this.state.activePage === 'customers' && <CustomerList cars={this.state.cars}/>}
             </Container>
