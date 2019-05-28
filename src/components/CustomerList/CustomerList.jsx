@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import ReturnModal from '../ReturnModal/ReturnModal'
 import CustomerDetails from '../CustomerDetails/CustomerDetails.jsx';
 
 const db = firebase.firestore();
@@ -58,11 +58,11 @@ class CustomerList extends Component {
     }
 
     closeModal() {
-        this.setState({toReturn: {}, showModal: false})
+        this.setState({customer: {}, showModal: false})
     }
 
     openModal(customer){
-        this.setState({toReturn: customer, showModal: true})
+        this.setState({customer: customer, showModal: true})
     }
 
 
@@ -77,8 +77,9 @@ class CustomerList extends Component {
         ))
         return(
                 <Container style={{marginTop: '10px'}}>
-                {this.state.showModal && <ReturnModal closeModal={this.closeModal.bind(this)} returnCar={this.handleReturn.bind(this)} customer={this.state.toReturn}/>}
+                {this.state.showModal && <CustomerDetails closeModal={this.closeModal.bind(this)} returnCar={this.handleReturn.bind(this)} customer={this.state.customer}/>}
                 <Row><h1>Customers</h1></Row>
+                <Col>
                     <Table bordered striped hover size="sm">
                     <thead>
                     <tr>
@@ -92,6 +93,7 @@ class CustomerList extends Component {
                         {customers}
                     </tbody>
                     </Table>
+                </Col>
                 </Container>
         );
     }

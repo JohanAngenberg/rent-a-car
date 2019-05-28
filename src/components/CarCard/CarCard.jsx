@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import firebase from '../firebase/firebase.js';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import BookingModal from '../BookingModal/BookingModal.jsx';
@@ -32,8 +31,7 @@ class CarCard extends Component {
             booking_initial_odo: odometer,
 
         }
-        console.log(JSON.stringify(data));
-        if (customersCheck.length !== 0 && plate && odometer) {
+        if (ssn && plate && odometer) {
         fetch('https://biluthyrning.herokuapp.com/api/booking/create.php', {
             method: "POST",
             headers: {
@@ -47,10 +45,12 @@ class CarCard extends Component {
         } 
     }
 
+    handleBooking = this.handleBooking.bind(this)
+
     render() {
         return (
             <>
-            {this.state.showModal && <BookingModal toggleModal={this.toggleModal.bind(this)} createBooking={this.handleBooking.bind(this)} />}
+            {this.state.showModal && <BookingModal createCustomer={this.props.createCustomer} cartype={this.props.car.name} customers={this.props.customers} toggleModal={this.toggleModal.bind(this)} createBooking={this.handleBooking} />}
             <Card style={{ width: '18rem', margin: '10px' }}>
                 <div style={{height: "200px"}}>
                 <Card.Img variant="top" src={this.props.car.img}/>

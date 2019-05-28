@@ -7,6 +7,7 @@ import UserPage from '../UserPage/UserPage.jsx';
 import CustomerList from '../CustomerList/CustomerList.jsx';
 import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
+import { jsxOpeningElement } from '@babel/types';
 
 
 const db = firebase.firestore();
@@ -80,6 +81,29 @@ class MainWrapper extends Component {
         .catch(err => console.log(err))
     }
 
+    createCustomer(ssn, firstName, lastName) {
+
+        let data = {
+            customer_firstname: firstName,
+            customer_lastname: lastName,
+            customer_ssn: ssn,
+        }
+
+        return fetch('https://biluthyrning.herokuapp.com/api/customer/create.php', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then((res) => res.json().then(json => json))
+        .then((json) => json)
+        .then(() => this.getCustomers())
+        .catch(err => err )
+    }
+
+    createCustomer = this.createCustomer.bind(this)
+
     componentDidMount() {
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -112,7 +136,7 @@ class MainWrapper extends Component {
                 toggleSignUp={this.handleToggleSignUp.bind(this)}
                 signUpUser={this.handleSignUp.bind(this)}
                 /> : null}
-                {this.state.activePage === 'browse' && <CarListings customers={this.state.customers} user={this.state.user} updateCars={this.updateCars.bind(this)}/>}
+                {this.state.activePage === 'browse' && <CarListings createCustomer={this.createCustomer} customers={this.state.customers} user={this.state.user} updateCars={this.updateCars.bind(this)}/>}
                 {this.state.activePage === 'bookings' && <UserPage cars={this.state.cars}/>}
                 {this.state.activePage === 'customers' && <CustomerList cars={this.state.cars}/>}
             </Container>

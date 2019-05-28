@@ -24,7 +24,7 @@ class ReturnModal extends Component {
         <>
         <Modal show={true}>
             <Modal.Header>
-                <Modal.Title>Book {this.props.type}</Modal.Title>
+                <Modal.Title>Return {this.props.type}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
