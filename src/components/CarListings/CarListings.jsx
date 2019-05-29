@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CarCard from '../CarCard/CarCard.jsx';
+import Calendar from '../Calendar/Calendar.jsx';
 import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -53,7 +54,8 @@ class CarListings extends Component {
             distance: 0,
             showType: '',
             cars: [],
-            activePage: 'browse'
+            activePage: 'browse',
+            showCalendar: false
 
         }
     }
@@ -84,13 +86,20 @@ class CarListings extends Component {
         this.setState({showType: e.target.value})
     }
 
+    showCalendar() {
+        this.setState({showCalendar: true})
+        
+    }
+
+    showCalendar = this.showCalendar.bind(this)
+
 
     render() {
 
         const cars = this.state.cars
         .filter(car => this.state.showType === '' ? car : (car.name === this.state.showType))
         .map((car) => (
-                <CarCard createCustomer={this.props.createCustomer} customers={this.props.customers} user={this.props.user} key={car.licencePlate} car={car} duration={this.state.duration}/>
+                <CarCard showCalendar={this.showCalendar} createCustomer={this.props.createCustomer} customers={this.props.customers} user={this.props.user} key={car.licencePlate} car={car} duration={this.state.duration}/>
             ));
         
         return(
@@ -131,7 +140,7 @@ class CarListings extends Component {
 
                 {!this.state.isLoading ? 
                 <Row>
-                {cars}
+                    {this.state.showCalendar ? <Calendar/> : cars}
                 </Row> : <div>Loading</div>
                 }
             </Container>

@@ -7,10 +7,7 @@ import UserPage from '../UserPage/UserPage.jsx';
 import CustomerList from '../CustomerList/CustomerList.jsx';
 import firebase from '../firebase/firebase.js';
 import Container from 'react-bootstrap/Container';
-import { jsxOpeningElement } from '@babel/types';
 
-
-const db = firebase.firestore();
 const auth = firebase.auth();
 const user = firebase.auth().onAuthStateChanged(function(user) {
     if (user) {

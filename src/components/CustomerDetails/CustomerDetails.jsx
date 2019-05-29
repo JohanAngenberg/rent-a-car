@@ -1,7 +1,5 @@
 import React, {Component} from  'react';
-import firebase from '../firebase/firebase.js';
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import ReturnModal from '../ReturnModal/ReturnModal.jsx';
@@ -21,9 +19,6 @@ class CustomerDetails extends Component {
     handleReturn (finalOdometer){
         const booking = this.state.toReturn;
         
-        let today = new Date();
-        let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         let dateTime = moment();
         let distance = finalOdometer - booking.initial_odo;
         let duration = 1 + dateTime.diff(booking.start, 'days');

@@ -20,6 +20,10 @@ class CarCard extends Component {
         this.setState({showModal: !this.state.showModal})
     }
 
+    handleClickCalendar(){
+        this.props.showCalendar()
+    }
+
     handleBooking(ssn, plate, odometer) {
         let customersCheck = this.props.customers.filter(c => c.ssn === ssn)
         let dateTime = moment();
@@ -63,9 +67,9 @@ class CarCard extends Component {
                     <ListGroup.Item>Price per km: {this.props.car.kmPrice * this.props.car.kmMultiplier}$</ListGroup.Item>
                     <ListGroup.Item>Estimated price: {this.props.car.baseDayRental * this.props.duration * this.props.car.dayMultiplier}$</ListGroup.Item>
                 </ListGroup>
-                {this.props.user ? <Card.Body onClick={this.toggleModal.bind(this)}>
-                    <Card.Link 
-                        href="#">Rent Car
+                {this.props.user ? <Card.Body>
+                    <Card.Link onClick={this.handleClickCalendar.bind(this)}
+                        href="#">Check Availability
                     </Card.Link>
                     </Card.Body>
                 : <Card.Body>
